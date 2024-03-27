@@ -18,6 +18,19 @@ public class UserRoutesHandler extends BaseHandler {
         initializeWebClient(prismaServiceAddress + "/user");
     }
 
+    public Mono<ServerResponse> getById(ServerRequest req) {
+        String id = req.pathVariable("id");
+        String authorizationHeader = req.headers().firstHeader("Authorization");
+        return this.webClient.get()
+                        .uri("/" + id)
+                        .header("Authorization", authorizationHeader)
+                        .retrieve()
+                        .bodyToMono(UserDto.class)
+                        .flatMap(userDto ->
+                                ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(userDto))
+                        .onErrorResume(this::handleResponseError);
+    }
+
     public Mono<ServerResponse> create(ServerRequest req) {
         String authorizationHeader = req.headers().firstHeader("Authorization");
         return req.bodyToMono(UserPOSTReq.class)
@@ -33,9 +46,7 @@ public class UserRoutesHandler extends BaseHandler {
                                             .contentType(MediaType.APPLICATION_JSON)
                                             .bodyValue(userDto));
                         }))
-                        .onErrorResume(e ->
-                                this.handleResponseError(e)
-                        );
+                        .onErrorResume(this::handleResponseError);
     }
 
     public Mono<ServerResponse> patch(ServerRequest req) {

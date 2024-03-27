@@ -17,4 +17,12 @@ public class UserDto {
     private String auth0Id;
 
     private String email;
+
+    private String name;
+
+    private String addressLineOne;
+
+    private String city;
+
+    private String country;
 }
