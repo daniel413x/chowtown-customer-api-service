@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 @Component
 public class UserRoutesHandler extends BaseHandler {
 
-    public UserRoutesHandler(@Value("${PRISMA_SVC_ADDRESS}") String prismaServiceAddress) {
-        initializeWebClient(prismaServiceAddress + "/user");
+    public UserRoutesHandler() {
+        initializeWebClient(System.getenv("PRISMA_SVC_ADDRESS") + "/user");
     }
 
     public Mono<ServerResponse> getById(ServerRequest req) {

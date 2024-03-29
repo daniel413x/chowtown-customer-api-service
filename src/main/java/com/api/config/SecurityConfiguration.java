@@ -24,12 +24,6 @@ import java.util.List;
 @EnableReactiveMethodSecurity
 public class SecurityConfiguration {
 
-	@Value("${AUTH0_ISSUER_BASE_URL}")
-	private String issuerUri;
-
-	@Value("${CLIENT_SVC_ADDRESS}")
-	private String clientAddress;
-
 	@Bean
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 		return http
@@ -43,14 +37,14 @@ public class SecurityConfiguration {
 
 	@Bean
 	public ReactiveJwtDecoder jwtDecoder() {
-		return ReactiveJwtDecoders.fromOidcIssuerLocation(issuerUri);
+		return ReactiveJwtDecoders.fromOidcIssuerLocation(System.getenv("AUTH0_ISSUER_BASE_URL"));
 	}
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowCredentials(true);
-		configuration.setAllowedOrigins(List.of(clientAddress));
+		configuration.setAllowedOrigins(List.of(System.getenv("CLIENT_SVC_ADDRESS")));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PATCH"));
 		configuration.setAllowedHeaders(List.of("*"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
