@@ -4,7 +4,6 @@ import com.api.user.dto.UserDto;
 import com.api.user.dto.UserPATCHReq;
 import com.api.user.dto.UserPOSTReq;
 import com.api.utils.BaseHandler;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -15,7 +14,7 @@ import reactor.core.publisher.Mono;
 public class UserRoutesHandler extends BaseHandler {
 
     public UserRoutesHandler() {
-        initializeWebClient(System.getenv("PRISMA_SVC_ADDRESS") + "/user");
+        initializeWebClient(System.getenv("MONGO_SVC_ADDRESS") + "/user");
     }
 
     public Mono<ServerResponse> getById(ServerRequest req) {
