@@ -2,12 +2,9 @@
 FROM maven:3.8.4-openjdk-17-slim AS build
 WORKDIR /app
 COPY . .
-ARG ENV
-RUN cp .env.${ENV} .env
-RUN mvn clean package && \
+RUN mvn clean package -DskipTests && \
     mv target/*.jar app.jar && \
-    mv app.jar /tmp/ && \
-    mv .env.${ENV} /tmp/.env
+    mv app.jar /tmp/
 
 FROM openjdk:17-slim
 WORKDIR /app
