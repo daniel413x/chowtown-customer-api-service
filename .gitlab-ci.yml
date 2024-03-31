@@ -72,7 +72,10 @@ containerize for staging:
     - git clone https://oauth2:$WRITE_TOKEN@gitlab.com/$GITLAB_ACCOUNT_NAME/$PROJECT_GROUP-tests.git cypress
     - cd cypress
     - npm install
+    - cat $CYPRESS_ENV_JSON > cypress.env.json
     - npm run cypress:run
+  after_script:
+    - rm cypress.env.json
 
 test staging app:
   only:
