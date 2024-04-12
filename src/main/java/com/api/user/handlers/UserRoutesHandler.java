@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 public class UserRoutesHandler extends BaseHandler {
 
     public UserRoutesHandler() {
-        initializeWebClient(System.getenv("MONGO_SVC_ADDRESS") + "/user");
+        initializeWebClient(System.getenv("USER_SVC_ADDRESS") + "/user");
     }
 
     public Mono<ServerResponse> getById(ServerRequest req) {
