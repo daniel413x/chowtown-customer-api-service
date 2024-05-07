@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
@@ -29,5 +30,14 @@ public abstract class BaseHandler {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .bodyValue("Internal Server Error: " + e.getMessage());
         }
+    }
+
+    public String getQueryString(ServerRequest req) {
+        String queryString = req.uri().getQuery();
+        String addedQueryString = "";
+        if (queryString != null) {
+            addedQueryString = "?" + queryString;
+        }
+        return addedQueryString;
     }
 }

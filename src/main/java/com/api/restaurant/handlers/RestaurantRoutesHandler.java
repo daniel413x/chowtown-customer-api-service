@@ -14,6 +14,19 @@ public class RestaurantRoutesHandler extends BaseHandler {
         initializeWebClient(System.getenv("RESTAURANT_SVC_ADDRESS"));
     }
 
+    public Mono<ServerResponse> getByRestaurantId(ServerRequest req) {
+        String restaurantId = req.pathVariable("restaurantId");
+        String authorizationHeader = req.headers().firstHeader("Authorization");
+        return this.webClient.get()
+                .uri("/by-id" + "/" + restaurantId)
+                .header("Authorization", authorizationHeader)
+                .retrieve()
+                .bodyToMono(Object.class)
+                .flatMap(restaurant ->
+                        ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(restaurant))
+                .onErrorResume(this::handleResponseError);
+    }
+
     public Mono<ServerResponse> getByRestaurantSlug(ServerRequest req) {
         String restaurantSlug = req.pathVariable("restaurantSlug");
         return this.webClient.get()
@@ -35,14 +48,5 @@ public class RestaurantRoutesHandler extends BaseHandler {
                         .flatMap(restaurantDtoArr ->
                                 ServerResponse.ok().contentType(MediaType.APPLICATION_JSON).bodyValue(restaurantDtoArr))
                         .onErrorResume(this::handleResponseError);
-    }
-
-    private String getQueryString(ServerRequest req) {
-        String queryString = req.uri().getQuery();
-        String addedQueryString = "";
-        if (queryString != null) {
-            addedQueryString = "?" + queryString;
-        }
-        return addedQueryString;
     }
 }

@@ -16,6 +16,7 @@ public class OrdersRouter {
         return RouterFunctions
                 .route()
                 .nest(RequestPredicates.path("/api/orders"), builder -> {
+                    builder.GET("/user", ordersRoutesHandler::getUserOrders);
                     builder.POST("/create-checkout-session", ordersRoutesHandler::createCheckoutSession);
                     builder.POST("/stripe-checkout-webhook", ordersRoutesHandler::stripeCheckoutWebhook);
                 })

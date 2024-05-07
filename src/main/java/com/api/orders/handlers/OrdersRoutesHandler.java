@@ -14,6 +14,22 @@ public class OrdersRoutesHandler extends BaseHandler {
         initializeWebClient(System.getenv("ORDERS_SVC_ADDRESS") + "/orders");
     }
 
+    public Mono<ServerResponse> getUserOrders(ServerRequest req) {
+        String addedQueryString = getQueryString(req);
+        String authorizationHeader = req.headers().firstHeader("Authorization");
+        return this.webClient.get()
+                .uri("/user" + addedQueryString)
+                .header("Authorization", authorizationHeader)
+                .exchangeToMono(response -> {
+                    return response.bodyToMono(Object.class)
+                            .flatMap(resBody -> ServerResponse
+                                    .status(response.statusCode())
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .bodyValue(resBody));
+                })
+                .onErrorResume(this::handleResponseError);
+    }
+
     public Mono<ServerResponse> createCheckoutSession(ServerRequest req) {
         String authorizationHeader = req.headers().firstHeader("Authorization");
         return req.bodyToMono(Object.class)
